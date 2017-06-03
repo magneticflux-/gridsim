@@ -2,7 +2,7 @@ group 'org.skaggsm'
 version '0.1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.2-4'
+    ext.kotlin_version = '1.1.2-2'
 
     repositories {
         jcenter()
@@ -29,4 +29,6 @@ dependencies {
 
     testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
+    testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
+
 }

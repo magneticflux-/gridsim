@@ -5,7 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 
 /**
  * @author Mitchell Skaggs
@@ -30,7 +31,7 @@ class WorldTest {
 
         @Test
         void isAWorld() {
-            assertEquals(world.getClass(), World.class);
+            assertThat(world, instanceOf(World.class));
         }
     }
 }
