@@ -15,35 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.skaggsm.gridsim;
+package org.skaggsm.gridsim.tile.delta;
 
+import org.jetbrains.annotations.NotNull;
+import org.skaggsm.gridsim.World;
 import org.skaggsm.gridsim.tile.Tile;
 
 /**
  * @author Mitchell Skaggs
  */
-public class World {
+public abstract class TileDelta {
+    protected final int row, col;
 
-    private final Tile[][] tiles;
-    private final int rows, cols;
-
-    public World(int rows, int cols) {
-        tiles = new Tile[rows][cols];
-        for (Tile[] tiles : tiles) ArrayExtentionsKt.fill(tiles, Tile::new);
-
-        this.rows = rows;
-        this.cols = cols;
+    public TileDelta(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
-    public Tile getTile(int row, int col) {
-        return tiles[row][col];
+    public Tile getCorrespondingTile(@NotNull World world) {
+        return world.getTile(getRow(), getCol());
     }
 
-    public int getRows() {
-        return rows;
+    public int getRow() {
+        return row;
     }
 
-    public int getCols() {
-        return cols;
+    public int getCol() {
+        return col;
     }
+
+    public abstract void apply(Tile tile);
 }

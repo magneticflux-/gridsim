@@ -21,41 +21,39 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.skaggsm.gridsim.subsystem.TemperatureSubsystem;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import java.util.Collections;
 
 /**
  * @author Mitchell Skaggs
  */
-@DisplayName("A World")
-class WorldTest {
+@DisplayName("An Engine")
+class EngineTest {
+    private Engine engine;
     private World world;
 
-    @Test
-    @DisplayName("is instantiated with new World()")
-    void isInstantiatedWithNew() {
-        new World(1, 1);
-    }
-
     @Nested
-    @DisplayName("when initialized as 5x5")
+    @DisplayName("when new")
     class WhenNew {
         @BeforeEach
-        void createNewWorld() {
+        void createNewEngine() {
             world = new World(5, 5);
+            engine = new Engine(world, Collections.singletonList(new TemperatureSubsystem()));
         }
 
         @Test
-        @DisplayName("has 5 rows")
-        void hasCorrectRows() {
-            assertThat(world.getRows(), is(5));
+        @DisplayName("can tick")
+        void canTick() {
+            engine.tick();
         }
 
-        @Test
-        @DisplayName("has 5 columns")
-        void hasCorrectCols() {
-            assertThat(world.getCols(), is(5));
+        @DisplayName("when tick processed")
+        class WhenTickProcessed {
+            @BeforeEach
+            void tickEngine() {
+                engine.tick();
+            }
         }
     }
 }

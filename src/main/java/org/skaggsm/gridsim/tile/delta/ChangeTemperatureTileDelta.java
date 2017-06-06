@@ -15,35 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.skaggsm.gridsim;
+package org.skaggsm.gridsim.tile.delta;
 
 import org.skaggsm.gridsim.tile.Tile;
 
 /**
  * @author Mitchell Skaggs
  */
-public class World {
+public class ChangeTemperatureTileDelta extends TileDelta {
+    private final double temperatureDelta;
 
-    private final Tile[][] tiles;
-    private final int rows, cols;
-
-    public World(int rows, int cols) {
-        tiles = new Tile[rows][cols];
-        for (Tile[] tiles : tiles) ArrayExtentionsKt.fill(tiles, Tile::new);
-
-        this.rows = rows;
-        this.cols = cols;
+    public ChangeTemperatureTileDelta(int row, int col, double temperatureDelta) {
+        super(row, col);
+        this.temperatureDelta = temperatureDelta;
     }
 
-    public Tile getTile(int row, int col) {
-        return tiles[row][col];
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
+    @Override
+    public void apply(Tile tile) {
+        tile.setTemperature(tile.getTemperature() + temperatureDelta);
     }
 }

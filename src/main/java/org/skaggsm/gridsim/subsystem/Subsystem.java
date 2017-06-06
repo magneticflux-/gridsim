@@ -15,35 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.skaggsm.gridsim;
+package org.skaggsm.gridsim.subsystem;
 
-import org.skaggsm.gridsim.tile.Tile;
+import org.skaggsm.gridsim.World;
+import org.skaggsm.gridsim.tile.delta.TileDelta;
+
+import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author Mitchell Skaggs
  */
-public class World {
-
-    private final Tile[][] tiles;
-    private final int rows, cols;
-
-    public World(int rows, int cols) {
-        tiles = new Tile[rows][cols];
-        for (Tile[] tiles : tiles) ArrayExtentionsKt.fill(tiles, Tile::new);
-
-        this.rows = rows;
-        this.cols = cols;
-    }
-
-    public Tile getTile(int row, int col) {
-        return tiles[row][col];
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
-    }
+public interface Subsystem {
+    Collection<TileDelta> compute(World world, ExecutorService executorService);
 }

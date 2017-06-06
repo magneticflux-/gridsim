@@ -21,41 +21,37 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.skaggsm.gridsim.tile.Tile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 /**
  * @author Mitchell Skaggs
  */
-@DisplayName("A World")
-class WorldTest {
-    private World world;
-
-    @Test
-    @DisplayName("is instantiated with new World()")
-    void isInstantiatedWithNew() {
-        new World(1, 1);
-    }
+@DisplayName("A Tile")
+class TileTest {
+    private Tile tile;
 
     @Nested
-    @DisplayName("when initialized as 5x5")
+    @DisplayName("when new")
     class WhenNew {
         @BeforeEach
-        void createNewWorld() {
-            world = new World(5, 5);
+        void createNewTile() {
+            tile = new Tile();
         }
 
+        @DisplayName("is at 273K")
         @Test
-        @DisplayName("has 5 rows")
-        void hasCorrectRows() {
-            assertThat(world.getRows(), is(5));
+        void isAtZeroCelsius() {
+            assertThat(tile.getTemperature(), is(equalTo(273d)));
         }
 
+        @DisplayName("has thermal conductivity of water (0.591)")
         @Test
-        @DisplayName("has 5 columns")
-        void hasCorrectCols() {
-            assertThat(world.getCols(), is(5));
+        void hasThermalConductivityOfWater() {
+            assertThat(tile.getThermalConductivity(), is(equalTo(0.591)));
         }
     }
 }
