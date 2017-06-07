@@ -21,13 +21,26 @@ package org.skaggsm.gridsim.tile;
  * @author Mitchell Skaggs
  */
 public class Tile {
-    private double temperature = 273; // K
-    private double thermalConductivity = 10.591; // J / (m * K * s)
-    private double heatCapacity = 0.6; // J /(g * K)
-    private double mass = 1; // kg
+    private Material material;
+    private double temperature; // K
+    private double sideLength; // m
 
-    public double getTemperatureC() {
-        return getTemperature() - 273;
+    public Tile(double sideLength) {
+        this(sideLength, DefaultMaterial.GRANITE);
+    }
+
+    public Tile(double sideLength, Material material) {
+        this(sideLength, 273, material);
+    }
+
+    public Tile(double sideLength, double temperature, Material material) {
+        this.sideLength = sideLength;
+        this.temperature = temperature;
+        this.material = material;
+    }
+
+    public Tile(double sideLength, double temperature) {
+        this(sideLength, temperature, DefaultMaterial.GRANITE);
     }
 
     public double getTemperature() {
@@ -38,19 +51,31 @@ public class Tile {
         this.temperature = temperature;
     }
 
-    public void setTemperatureC(double temperature) {
-        setTemperature(temperature + 273);
-    }
-
     public double getThermalConductivity() {
-        return thermalConductivity;
+        return material.getThermalConductivity();
     }
 
     public double getHeatCapacity() {
-        return heatCapacity * (mass * 1000);
+        return material.getSpecificHeatCapacity() * getMass();
     }
 
     public double getMass() {
-        return mass;
+        return getDensity() * getVolume();
+    }
+
+    public double getDensity() {
+        return material.getDensity();
+    }
+
+    public double getVolume() {
+        return sideLength * sideLength * sideLength;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 }

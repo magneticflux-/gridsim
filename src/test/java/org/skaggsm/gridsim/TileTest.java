@@ -39,7 +39,7 @@ class TileTest {
     class WhenNew {
         @BeforeEach
         void createNewTile() {
-            tile = new Tile();
+            tile = new Tile(1);
         }
 
         @DisplayName("is at 273K")

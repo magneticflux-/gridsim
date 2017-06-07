@@ -15,36 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.skaggsm.gridsim;
-
-import org.skaggsm.gridsim.tile.Tile;
+package org.skaggsm.gridsim.tile;
 
 /**
  * @author Mitchell Skaggs
  */
-public class World {
-
-    private final Tile[][] tiles;
-    private final int rows, cols;
-
-    public World(int rows, int cols) {
-        tiles = new Tile[rows][cols];
-        for (Tile[] tiles : tiles)
-            ArrayExtentionsKt.fill(tiles, () -> new Tile(1));
-
-        this.rows = rows;
-        this.cols = cols;
-    }
-
-    public Tile getTile(int row, int col) {
-        return tiles[row][col];
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
+public class WaterTile extends Tile {
+    public WaterTile(double sideLength) {
+        super(sideLength);
     }
 }

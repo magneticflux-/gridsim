@@ -28,7 +28,7 @@ import org.skaggsm.gridsim.tile.delta.TileDelta;
 public class TemperatureSubsystem extends LocalSubsystem {
     private static final double SIDE_LENGTH = 1; // m
     private static final double CONTACT_AREA = SIDE_LENGTH * SIDE_LENGTH; // m^2
-    private static final double DELTA_T = 14.18;
+    private static final double DELTA_T = 2000;
 
     @Override
     protected TileDelta getTileDeltaForTile(int row, int col, World world) {
