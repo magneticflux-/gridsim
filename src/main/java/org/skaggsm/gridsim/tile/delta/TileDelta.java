@@ -45,4 +45,8 @@ public abstract class TileDelta {
     }
 
     public abstract void apply(Tile tile);
+
+    public TileDelta append(TileDelta other) {
+        return new CompositeTileDelta(this, other);
+    }
 }

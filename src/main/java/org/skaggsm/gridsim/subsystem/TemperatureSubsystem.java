@@ -46,25 +46,25 @@ public class TemperatureSubsystem extends LocalSubsystem {
         double tileTemperatureDelta = 0;
 
         if (row - 1 >= 0)
-            tileTemperatureDelta += getTemperatureDelta(tile, row, col, world.getTile(row - 1, col), row - 1, col);
+            tileTemperatureDelta += getTemperatureDeltaNew(tile, row, col, world.getTile(row - 1, col), row - 1, col);
         if (row + 1 < world.getRows())
-            tileTemperatureDelta += getTemperatureDelta(tile, row, col, world.getTile(row + 1, col), row + 1, col);
+            tileTemperatureDelta += getTemperatureDeltaNew(tile, row, col, world.getTile(row + 1, col), row + 1, col);
         if (col - 1 >= 0)
-            tileTemperatureDelta += getTemperatureDelta(tile, row, col, world.getTile(row, col - 1), row, col - 1);
+            tileTemperatureDelta += getTemperatureDeltaNew(tile, row, col, world.getTile(row, col - 1), row, col - 1);
         if (col + 1 < world.getCols())
-            tileTemperatureDelta += getTemperatureDelta(tile, row, col, world.getTile(row, col + 1), row, col + 1);
+            tileTemperatureDelta += getTemperatureDeltaNew(tile, row, col, world.getTile(row, col + 1), row, col + 1);
 
         return new ChangeTemperatureTileDelta(row, col, tileTemperatureDelta);
     }
 
-    private double getTemperatureDelta(Tile tile1, int row1, int col1, Tile tile2, int row2, int col2) {
+    private double getTemperatureDeltaNew(Tile tile1, int row1, int col1, Tile tile2, int row2, int col2) {
         boolean outOfOrder = TilePair.isOutOfOrder(row1, col1, row2, col2);
         double result = computations.computeIfAbsent(new TilePair(outOfOrder, row1, col1, row2, col2), tilePair -> (outOfOrder ? -1 : 1) * getHeatFlux(tile1, tile2) * DELTA_T * CONTACT_AREA);
         //dt * A * flux / c
         return (outOfOrder ? -1 : 1) * result / tile1.getHeatCapacity();
     }
 
-    private double getHeatFlux(Tile tile1, Tile tile2) {
+    private static double getHeatFlux(Tile tile1, Tile tile2) {
         double averageThermalConductivity = (tile1.getThermalConductivity() + tile2.getThermalConductivity()) / 2;
         double deltaTemperature = tile1.getTemperature() - tile2.getTemperature();
         double deltaX = SIDE_LENGTH;
