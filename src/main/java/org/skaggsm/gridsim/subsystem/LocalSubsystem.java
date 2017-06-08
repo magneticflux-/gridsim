@@ -36,6 +36,7 @@ public abstract class LocalSubsystem implements Subsystem {
 
     @Override
     public Collection<TileDelta> compute(World world, ExecutorService executorService) {
+        preCompute();
         List<Future<TileDelta>> futures = new LinkedList<>();
 
         for (int row = 0; row < world.getRows(); row++) {
@@ -45,6 +46,9 @@ public abstract class LocalSubsystem implements Subsystem {
         }
 
         return futures.stream().map(FutureExtensionsKt::getSilently).collect(Collectors.toList());
+    }
+
+    protected void preCompute() {
     }
 
     /**

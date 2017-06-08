@@ -64,7 +64,7 @@ public class Run {
             jPanel.paintImmediately(jPanel.getVisibleRect());
             //System.out.println("Paint: " + TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
             //startTime = System.nanoTime();
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
                 engine.tick();
             //System.out.println("Tick: " + TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
 
