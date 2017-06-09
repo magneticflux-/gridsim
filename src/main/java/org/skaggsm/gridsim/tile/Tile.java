@@ -17,12 +17,14 @@
 
 package org.skaggsm.gridsim.tile;
 
+import com.google.common.util.concurrent.AtomicDouble;
+
 /**
  * @author Mitchell Skaggs
  */
 public class Tile {
     private Material material;
-    private double temperature; // K
+    private AtomicDouble temperature; // K
     private double sideLength; // m
 
     public Tile(double sideLength) {
@@ -35,7 +37,7 @@ public class Tile {
 
     public Tile(double sideLength, double temperature, Material material) {
         this.sideLength = sideLength;
-        this.temperature = temperature;
+        this.temperature = new AtomicDouble(temperature);
         this.material = material;
     }
 
@@ -44,11 +46,11 @@ public class Tile {
     }
 
     public double getTemperature() {
-        return temperature;
+        return temperature.get();
     }
 
     public void setTemperature(double temperature) {
-        this.temperature = temperature;
+        this.temperature.set(temperature);
     }
 
     public double getThermalConductivity() {
@@ -77,5 +79,9 @@ public class Tile {
 
     public void setMaterial(Material material) {
         this.material = material;
+    }
+
+    public void addTemperature(double temperatureDelta) {
+        this.temperature.addAndGet(temperatureDelta);
     }
 }

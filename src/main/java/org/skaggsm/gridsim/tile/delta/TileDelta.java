@@ -32,6 +32,12 @@ public abstract class TileDelta {
         this.col = col;
     }
 
+    public void apply(World world) {
+        apply(getCorrespondingTile(world));
+    }
+
+    public abstract void apply(Tile tile);
+
     public Tile getCorrespondingTile(@NotNull World world) {
         return world.getTile(getRow(), getCol());
     }
@@ -42,11 +48,5 @@ public abstract class TileDelta {
 
     public int getCol() {
         return col;
-    }
-
-    public abstract void apply(Tile tile);
-
-    public TileDelta append(TileDelta other) {
-        return new CompositeTileDelta(this, other);
     }
 }

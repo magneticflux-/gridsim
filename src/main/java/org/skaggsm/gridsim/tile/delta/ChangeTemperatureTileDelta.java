@@ -32,6 +32,6 @@ public class ChangeTemperatureTileDelta extends TileDelta {
 
     @Override
     public void apply(Tile tile) {
-        tile.setTemperature(tile.getTemperature() + temperatureDelta);
+        tile.addTemperature(temperatureDelta);
     }
 }

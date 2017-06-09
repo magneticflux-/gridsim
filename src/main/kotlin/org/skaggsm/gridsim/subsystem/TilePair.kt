@@ -15,17 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.skaggsm.gridsim.subsystem;
-
-import org.skaggsm.gridsim.World;
-import org.skaggsm.gridsim.tile.delta.TileDelta;
-
-import java.util.Collection;
-import java.util.concurrent.ForkJoinPool;
+package org.skaggsm.gridsim.subsystem
 
 /**
  * @author Mitchell Skaggs
  */
-public interface Subsystem {
-    Collection<TileDelta> compute(World world, ForkJoinPool f);
-}
+
+data class TilePair(val row1: Int, val col1: Int, val row2: Int, val col2: Int)

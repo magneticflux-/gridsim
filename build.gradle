@@ -34,6 +34,14 @@ dependencies {
     // Helpful annotations from Jetbrains for nullability
     compile group: "org.jetbrains", name: "annotations", version: "15.0"
 
+    // https://mvnrepository.com/artifact/com.annimon/stream
+    // Extra Stream functions
+    compile group: 'com.annimon', name: 'stream', version: '1.1.7'
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    // Google utilities, fills holes in Java Lang
+    compile group: 'com.google.guava', name: 'guava', version: '22.0'
+
     testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
     testCompile group: "org.hamcrest", name: "java-hamcrest", version: "2.0.0.0"

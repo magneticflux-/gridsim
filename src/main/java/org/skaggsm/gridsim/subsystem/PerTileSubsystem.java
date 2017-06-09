@@ -25,30 +25,26 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
  * @author Mitchell Skaggs
  */
-public abstract class LocalSubsystem implements Subsystem {
+public abstract class PerTileSubsystem implements Subsystem {
 
     @Override
-    public Collection<TileDelta> compute(World world, ExecutorService executorService) {
-        preCompute();
+    public Collection<TileDelta> compute(World world, ForkJoinPool forkJoinPool) {
         List<Future<TileDelta>> futures = new LinkedList<>();
 
         for (int row = 0; row < world.getRows(); row++) {
             for (int col = 0; col < world.getCols(); col++) {
-                futures.add(executorService.submit(new ComputeTileDeltaCallable(row, col, world)));
+                futures.add(forkJoinPool.submit(new ComputeTileDeltaCallable(row, col, world)));
             }
         }
 
         return futures.stream().map(FutureExtensionsKt::getSilently).collect(Collectors.toList());
-    }
-
-    protected void preCompute() {
     }
 
     /**

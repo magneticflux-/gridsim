@@ -17,7 +17,7 @@
 
 package org.skaggsm.gridsim;
 
-import org.skaggsm.gridsim.subsystem.TemperatureSubsystem;
+import org.skaggsm.gridsim.subsystem.NewTemperatureSubsystem;
 import org.skaggsm.gridsim.tile.DefaultMaterial;
 import org.skaggsm.gridsim.tile.Tile;
 
@@ -36,7 +36,7 @@ public class Run {
 
     public static void main(String[] args) {
         World world = new World(50, 50);
-        Engine engine = new Engine(world, new TemperatureSubsystem());
+        Engine engine = new Engine(world, new NewTemperatureSubsystem());
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
@@ -47,9 +47,11 @@ public class Run {
 
         for (int col = 0; col < world.getCols(); col++) {
             world.getTile(10, col).setMaterial(DefaultMaterial.COPPER);
+            world.getTile(world.getRows() - 1, col).setMaterial(DefaultMaterial.COPPER);
         }
         for (int row = 0; row < world.getRows(); row++) {
             world.getTile(row, 10).setMaterial(DefaultMaterial.COPPER);
+            world.getTile(row, world.getCols() - 1).setMaterial(DefaultMaterial.COPPER);
         }
 
         JFrame jFrame = new JFrame();
