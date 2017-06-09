@@ -22,13 +22,12 @@ import org.skaggsm.gridsim.tile.Tile;
 import org.skaggsm.gridsim.tile.delta.ChangeTemperatureTileDelta;
 import org.skaggsm.gridsim.tile.delta.TileDelta;
 
+import static org.skaggsm.gridsim.subsystem.NewTemperatureSubsystem.getHeatFlux;
+
 /**
  * @author Mitchell Skaggs
  */
 public class TemperatureSubsystem extends PerTileSubsystem {
-    public static final double SIDE_LENGTH = 1; // m
-    public static final double CONTACT_AREA = SIDE_LENGTH * SIDE_LENGTH; // m^2
-    public static final double DELTA_T = 2000;
 
     @Override
     protected TileDelta getTileDeltaForTile(int row, int col, World world) {
@@ -49,14 +48,7 @@ public class TemperatureSubsystem extends PerTileSubsystem {
     }
 
     private double getTemperatureDelta(Tile tile1, Tile tile2) {
-        return getHeatFlux(tile1, tile2) * DELTA_T * CONTACT_AREA / tile1.getHeatCapacity();
+        return getHeatFlux(tile1, tile2) * NewTemperatureSubsystem.DELTA_TIME * NewTemperatureSubsystem.CONTACT_AREA / tile1.getHeatCapacity();
     }
 
-    public static double getHeatFlux(Tile tile1, Tile tile2) {
-        double averageThermalConductivity = (tile1.getThermalConductivity() + tile2.getThermalConductivity()) / 2;
-        double deltaTemperature = tile1.getTemperature() - tile2.getTemperature();
-        double deltaX = SIDE_LENGTH;
-
-        return -averageThermalConductivity * deltaTemperature / deltaX;
-    }
 }

@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
 public class Run {
 
     public static void main(String[] args) {
-        World world = new World(50, 50);
+        World world = new World(100, 100);
         Engine engine = new Engine(world, new NewTemperatureSubsystem());
 
         for (int row = 0; row < 10; row++) {
@@ -66,9 +66,10 @@ public class Run {
             jPanel.paintImmediately(jPanel.getVisibleRect());
             //System.out.println("Paint: " + TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
             //startTime = System.nanoTime();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
                 engine.tick();
             //System.out.println("Tick: " + TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
+
 
             double tempSum = 0;
             for (int row = 0; row < world.getRows(); row++) {
@@ -77,11 +78,12 @@ public class Run {
                 }
             }
             System.out.printf("Total energy: %.4fJ\n", tempSum);
+
         }
     }
 
     private static class WorldJPanel extends JPanel {
-        private static final int TILE_SIZE = 16;
+        private static final int TILE_SIZE = 10;
         private final World world;
 
         public WorldJPanel(World world) {
@@ -128,7 +130,7 @@ public class Run {
                     else if (tile.getMaterial() == DefaultMaterial.STEEL)
                         g.setColor(Color.GRAY);
 
-                    g.drawRect(x, y, TILE_SIZE - 1, TILE_SIZE - 1);
+                    g.drawRect(x + TILE_SIZE / 2, y + TILE_SIZE / 2, 1, 1);
                     /*
                     g.setColor(Color.BLACK);
                     g.drawRect(x, y, TILE_SIZE, TILE_SIZE);

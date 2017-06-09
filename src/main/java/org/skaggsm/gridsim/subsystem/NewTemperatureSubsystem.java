@@ -25,21 +25,31 @@ import org.skaggsm.gridsim.tile.delta.TileDelta;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.skaggsm.gridsim.subsystem.TemperatureSubsystem.CONTACT_AREA;
-import static org.skaggsm.gridsim.subsystem.TemperatureSubsystem.DELTA_T;
-
 /**
  * @author Mitchell Skaggs
  */
 public class NewTemperatureSubsystem extends PerAdjacencySubsystem {
+    public static final double SIDE_LENGTH = 1; // m
+    public static final double CONTACT_AREA = SIDE_LENGTH * SIDE_LENGTH; // m^2
+    public static final double DELTA_TIME = 1;
+
     @Override
     protected List<TileDelta> getTileDeltasForAdjacency(int row1, int col1, int row2, int col2, World world) {
         Tile tile1 = world.getTile(row1, col1);
         Tile tile2 = world.getTile(row2, col2);
-        double heatFlux = TemperatureSubsystem.getHeatFlux(tile1, tile2) * DELTA_T * CONTACT_AREA;
+        double heatFlux = getHeatFlux(tile1, tile2);
         return Arrays.asList(
                 new ChangeTemperatureTileDelta(row1, col1, heatFlux / tile1.getHeatCapacity()),
                 new ChangeTemperatureTileDelta(row2, col2, -heatFlux / tile2.getHeatCapacity())
         );
+    }
+
+    public static double getHeatFlux(Tile tile1, Tile tile2) {
+        double averageThermalConductivity = (tile1.getThermalConductivity() + tile2.getThermalConductivity()) / 2;
+        double deltaTemperature = tile1.getTemperature() - tile2.getTemperature();
+        double dx = SIDE_LENGTH;
+        double dt = DELTA_TIME;
+
+        return -averageThermalConductivity * deltaTemperature * dt * CONTACT_AREA / dx;
     }
 }

@@ -31,7 +31,7 @@ public class TemperatureBenchmark {
     @Setup
     public void setupWorld() {
         System.out.println("Setup running!");
-        World world = new World(100, 100);
+        World world = new World(200, 200);
         engine = new Engine(world, new NewTemperatureSubsystem());
 
         for (int row = 0; row < 10; row++) {
@@ -43,17 +43,19 @@ public class TemperatureBenchmark {
 
         for (int col = 0; col < world.getCols(); col++) {
             world.getTile(10, col).setMaterial(DefaultMaterial.COPPER);
+            world.getTile(world.getRows() - 1, col).setMaterial(DefaultMaterial.COPPER);
         }
         for (int row = 0; row < world.getRows(); row++) {
             world.getTile(row, 10).setMaterial(DefaultMaterial.COPPER);
+            world.getTile(row, world.getCols() - 1).setMaterial(DefaultMaterial.COPPER);
         }
     }
 
     @Benchmark
     @Threads(1)
     @Fork(1)
-    @Warmup(iterations = 50, batchSize = 1)
-    @Measurement(iterations = 10, batchSize = 1)
+    @Warmup(iterations = 20, batchSize = 1, time = 5)
+    @Measurement(iterations = 10, batchSize = 1, time = 5)
     public void measureTick() {
         engine.tick();
     }
