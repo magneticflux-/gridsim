@@ -17,7 +17,7 @@
 
 package org.skaggsm.gridsim;
 
-import org.skaggsm.gridsim.subsystem.NewTemperatureSubsystem;
+import org.skaggsm.gridsim.subsystem.TemperatureSubsystem;
 import org.skaggsm.gridsim.tile.DefaultMaterial;
 import org.skaggsm.gridsim.tile.Tile;
 
@@ -35,22 +35,24 @@ import java.util.stream.IntStream;
 public class Run {
 
     public static void main(String[] args) {
-        World world = new World(100, 100);
-        Engine engine = new Engine(world, new NewTemperatureSubsystem());
-
+        World world = new World(125, 225);
+        Engine engine = new Engine(world, new TemperatureSubsystem());
+/*
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 world.getTile(row, col).setTemperature(1000);
                 world.getTile(row, col).setMaterial(DefaultMaterial.COPPER);
             }
-        }
+        }*/
 
         for (int col = 0; col < world.getCols(); col++) {
-            world.getTile(10, col).setMaterial(DefaultMaterial.COPPER);
-            world.getTile(world.getRows() - 1, col).setMaterial(DefaultMaterial.COPPER);
+            world.getTile(10, col).setMaterial(DefaultMaterial.COPPER).setTemperature(1000);
+            world.getTile(world.getRows() / 2, col).setMaterial(DefaultMaterial.COPPER).setTemperature(1000);
+            world.getTile(world.getRows() - 1, col).setMaterial(DefaultMaterial.COPPER).setTemperature(1000);
         }
         for (int row = 0; row < world.getRows(); row++) {
             world.getTile(row, 10).setMaterial(DefaultMaterial.COPPER);
+            world.getTile(row, world.getCols() / 2).setMaterial(DefaultMaterial.COPPER);
             world.getTile(row, world.getCols() - 1).setMaterial(DefaultMaterial.COPPER);
         }
 
@@ -83,7 +85,7 @@ public class Run {
     }
 
     private static class WorldJPanel extends JPanel {
-        private static final int TILE_SIZE = 10;
+        private static final int TILE_SIZE = 8;
         private final World world;
 
         public WorldJPanel(World world) {

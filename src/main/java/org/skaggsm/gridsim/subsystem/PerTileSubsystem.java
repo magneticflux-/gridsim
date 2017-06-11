@@ -17,17 +17,17 @@
 
 package org.skaggsm.gridsim.subsystem;
 
-import org.skaggsm.gridsim.FutureExtensionsKt;
 import org.skaggsm.gridsim.World;
 import org.skaggsm.gridsim.tile.delta.TileDelta;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
+
+import static org.skaggsm.gridsim.FutureExtensionsKt.getSilently;
 
 /**
  * @author Mitchell Skaggs
@@ -36,15 +36,15 @@ public abstract class PerTileSubsystem implements Subsystem {
 
     @Override
     public Collection<TileDelta> compute(World world, ForkJoinPool forkJoinPool) {
-        List<Future<TileDelta>> futures = new LinkedList<>();
+        List<TileLocation> tileLocations = new ArrayList<>(world.getRows() * world.getCols());
 
         for (int row = 0; row < world.getRows(); row++) {
             for (int col = 0; col < world.getCols(); col++) {
-                futures.add(forkJoinPool.submit(new ComputeTileDeltaCallable(row, col, world)));
+                tileLocations.add(new TileLocation(row, col));
             }
         }
 
-        return futures.stream().map(FutureExtensionsKt::getSilently).collect(Collectors.toList());
+        return getSilently(forkJoinPool.submit(new ComputeTileDeltaRecursiveTask(tileLocations, world)));
     }
 
     /**
@@ -56,19 +56,34 @@ public abstract class PerTileSubsystem implements Subsystem {
      */
     protected abstract TileDelta getTileDeltaForTile(int row, int col, World world);
 
-    private class ComputeTileDeltaCallable implements Callable<TileDelta> {
-        private final int row, col;
+    private class ComputeTileDeltaRecursiveTask extends RecursiveTask<List<TileDelta>> {
+        private final List<TileLocation> tiles;
         private final World world;
 
-        public ComputeTileDeltaCallable(int row, int col, World world) {
-            this.row = row;
-            this.col = col;
+        public ComputeTileDeltaRecursiveTask(List<TileLocation> tiles, World world) {
+            this.tiles = tiles;
             this.world = world;
         }
 
         @Override
-        public TileDelta call() throws Exception {
-            return getTileDeltaForTile(row, col, world);
+        protected List<TileDelta> compute() {
+            if (tiles.size() < 2000) {
+                List<TileDelta> deltas = new ArrayList<>(tiles.size());
+                for (TileLocation tileLocation : tiles)
+                    deltas.add(getTileDeltaForTile(tileLocation.getRow(), tileLocation.getCol(), world));
+                return deltas;
+            } else {
+                List<TileDelta> results = new ArrayList<>(tiles.size());
+
+                ForkJoinTask<List<TileDelta>> task1 = new ComputeTileDeltaRecursiveTask(tiles.subList(0, tiles.size() / 2), world).fork();
+                ComputeTileDeltaRecursiveTask task2 = new ComputeTileDeltaRecursiveTask(tiles.subList(tiles.size() / 2, tiles.size()), world);
+
+                results.addAll(task2.compute());
+                results.addAll(task1.join());
+
+                return results;
+            }
         }
     }
+
 }

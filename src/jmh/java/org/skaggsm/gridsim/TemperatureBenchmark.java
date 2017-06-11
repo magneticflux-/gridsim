@@ -18,7 +18,7 @@
 package org.skaggsm.gridsim;
 
 import org.openjdk.jmh.annotations.*;
-import org.skaggsm.gridsim.subsystem.NewTemperatureSubsystem;
+import org.skaggsm.gridsim.subsystem.TemperatureSubsystem;
 import org.skaggsm.gridsim.tile.DefaultMaterial;
 
 /**
@@ -31,8 +31,8 @@ public class TemperatureBenchmark {
     @Setup
     public void setupWorld() {
         System.out.println("Setup running!");
-        World world = new World(200, 200);
-        engine = new Engine(world, new NewTemperatureSubsystem());
+        World world = new World(1000, 1000);
+        engine = new Engine(world, new TemperatureSubsystem());
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
@@ -54,8 +54,8 @@ public class TemperatureBenchmark {
     @Benchmark
     @Threads(1)
     @Fork(1)
-    @Warmup(iterations = 20, batchSize = 1, time = 5)
-    @Measurement(iterations = 10, batchSize = 1, time = 5)
+    @Warmup(iterations = 5, batchSize = 1, time = 5)
+    @Measurement(iterations = 5, batchSize = 1, time = 5)
     public void measureTick() {
         engine.tick();
     }

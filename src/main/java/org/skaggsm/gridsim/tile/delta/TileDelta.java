@@ -32,11 +32,11 @@ public abstract class TileDelta {
         this.col = col;
     }
 
-    public void apply(World world) {
-        apply(getCorrespondingTile(world));
+    public void applyTo(World world) {
+        applyTo(getCorrespondingTile(world));
     }
 
-    public abstract void apply(Tile tile);
+    public abstract void applyTo(Tile tile);
 
     public Tile getCorrespondingTile(@NotNull World world) {
         return world.getTile(getRow(), getCol());

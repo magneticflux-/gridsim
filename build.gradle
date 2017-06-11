@@ -11,9 +11,9 @@ buildscript {
 plugins {
     id "java"
     id "me.champeau.gradle.jmh" version "0.3.1"
+    id "org.jetbrains.kotlin.jvm" version "1.1.2-2"
 }
 
-apply plugin: 'kotlin'
 apply plugin: "org.junit.platform.gradle.plugin"
 
 group "org.skaggsm"
@@ -30,6 +30,9 @@ dependencies {
     // Kotlin standard libraries
     compile group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jre8", version: "1.1.2-2"
 
+    // Kotlin Coroutines
+    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.16'
+
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
     // Helpful annotations from Jetbrains for nullability
     compile group: "org.jetbrains", name: "annotations", version: "15.0"
@@ -42,10 +45,25 @@ dependencies {
     // Google utilities, fills holes in Java Lang
     compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-M4'
+    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.0-M4'
     testCompile group: "org.hamcrest", name: "java-hamcrest", version: "2.0.0.0"
 
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
+compileKotlin {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 jmh {

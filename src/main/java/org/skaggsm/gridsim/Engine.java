@@ -28,8 +28,6 @@ import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
 import java.util.stream.Collectors;
 
-import static org.skaggsm.gridsim.FutureExtensionsKt.getSilently;
-
 /**
  * @author Mitchell Skaggs
  */
@@ -54,7 +52,9 @@ public class Engine {
         //System.out.printf("Compute time:\t%8d\n", stopwatch.elapsed(TimeUnit.NANOSECONDS));
         //stopwatch.reset().start();
 
-        getSilently(forkJoinPool.submit(new ApplyTileDeltaRecursiveAction(tileDeltas, world)));
+        tileDeltas.forEach(tileDelta -> tileDelta.applyTo(world));
+
+        //getSilently(forkJoinPool.submit(new ApplyTileDeltaRecursiveAction(tileDeltas, world)));
         //System.out.printf("Apply time:  \t%8d\n", stopwatch.elapsed(TimeUnit.NANOSECONDS));
     }
 
@@ -71,7 +71,7 @@ public class Engine {
         protected void compute() {
             if (tileDeltas.size() < 16000) {
                 for (TileDelta tileDelta : tileDeltas) {
-                    tileDelta.apply(world);
+                    tileDelta.applyTo(world);
                 }
             } else {
                 ForkJoinTask<Void> action1 = new ApplyTileDeltaRecursiveAction(tileDeltas.subList(0, tileDeltas.size() / 2), world).fork();

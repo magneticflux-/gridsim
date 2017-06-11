@@ -77,8 +77,9 @@ public class Tile {
         return material;
     }
 
-    public void setMaterial(Material material) {
+    public Tile setMaterial(Material material) {
         this.material = material;
+        return this;
     }
 
     public void addTemperature(double temperatureDelta) {

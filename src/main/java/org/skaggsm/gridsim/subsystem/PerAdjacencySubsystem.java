@@ -17,6 +17,7 @@
 
 package org.skaggsm.gridsim.subsystem;
 
+import kotlin.Pair;
 import org.skaggsm.gridsim.World;
 import org.skaggsm.gridsim.tile.delta.TileDelta;
 
@@ -48,12 +49,12 @@ public abstract class PerAdjacencySubsystem implements Subsystem {
         return getSilently(forkJoinPool.submit(new TileDeltasRecursiveTask(tilePairs, world)));
     }
 
-    private static int numPairs(int rows, int cols) {
+    protected static int numPairs(int rows, int cols) {
         // r*(c-1) + c*(r-1)
         return rows * (cols - 1) + cols * (rows - 1); // Formula for number of adjacent pairs in a grid
     }
 
-    protected abstract List<TileDelta> getTileDeltasForAdjacency(int row1, int col1, int row2, int col2, World world);
+    protected abstract Pair<TileDelta, TileDelta> getTileDeltasForAdjacency(int row1, int col1, int row2, int col2, World world);
 
     private class TileDeltasRecursiveTask extends RecursiveTask<List<TileDelta>> {
         private final List<TilePair> tilePairs;
@@ -69,14 +70,15 @@ public abstract class PerAdjacencySubsystem implements Subsystem {
             if (tilePairs.size() < 2500) {
                 List<TileDelta> tileDeltas = new ArrayList<>(tilePairs.size() * 2);
                 for (TilePair tilePair : tilePairs) {
-                    tileDeltas.addAll(
-                            getTileDeltasForAdjacency(
-                                    tilePair.getRow1(),
-                                    tilePair.getCol1(),
-                                    tilePair.getRow2(),
-                                    tilePair.getCol2(),
-                                    world
-                            ));
+                    Pair<TileDelta, TileDelta> pair = getTileDeltasForAdjacency(
+                            tilePair.getRow1(),
+                            tilePair.getCol1(),
+                            tilePair.getRow2(),
+                            tilePair.getCol2(),
+                            world
+                    );
+                    tileDeltas.add(pair.getFirst());
+                    tileDeltas.add(pair.getSecond());
                 }
                 return tileDeltas;
             } else {

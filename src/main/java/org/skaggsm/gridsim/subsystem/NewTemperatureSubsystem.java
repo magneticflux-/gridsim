@@ -17,13 +17,11 @@
 
 package org.skaggsm.gridsim.subsystem;
 
+import kotlin.Pair;
 import org.skaggsm.gridsim.World;
 import org.skaggsm.gridsim.tile.Tile;
 import org.skaggsm.gridsim.tile.delta.ChangeTemperatureTileDelta;
 import org.skaggsm.gridsim.tile.delta.TileDelta;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Mitchell Skaggs
@@ -31,14 +29,14 @@ import java.util.List;
 public class NewTemperatureSubsystem extends PerAdjacencySubsystem {
     public static final double SIDE_LENGTH = 1; // m
     public static final double CONTACT_AREA = SIDE_LENGTH * SIDE_LENGTH; // m^2
-    public static final double DELTA_TIME = 1;
+    public static final double DELTA_TIME = 50;
 
     @Override
-    protected List<TileDelta> getTileDeltasForAdjacency(int row1, int col1, int row2, int col2, World world) {
+    protected Pair<TileDelta, TileDelta> getTileDeltasForAdjacency(int row1, int col1, int row2, int col2, World world) {
         Tile tile1 = world.getTile(row1, col1);
         Tile tile2 = world.getTile(row2, col2);
         double heatFlux = getHeatFlux(tile1, tile2);
-        return Arrays.asList(
+        return new Pair<>(
                 new ChangeTemperatureTileDelta(row1, col1, heatFlux / tile1.getHeatCapacity()),
                 new ChangeTemperatureTileDelta(row2, col2, -heatFlux / tile2.getHeatCapacity())
         );
@@ -47,9 +45,7 @@ public class NewTemperatureSubsystem extends PerAdjacencySubsystem {
     public static double getHeatFlux(Tile tile1, Tile tile2) {
         double averageThermalConductivity = (tile1.getThermalConductivity() + tile2.getThermalConductivity()) / 2;
         double deltaTemperature = tile1.getTemperature() - tile2.getTemperature();
-        double dx = SIDE_LENGTH;
-        double dt = DELTA_TIME;
 
-        return -averageThermalConductivity * deltaTemperature * dt * CONTACT_AREA / dx;
+        return -averageThermalConductivity * deltaTemperature * DELTA_TIME * CONTACT_AREA / SIDE_LENGTH;
     }
 }

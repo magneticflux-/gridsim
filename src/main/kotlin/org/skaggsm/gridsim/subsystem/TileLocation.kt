@@ -15,23 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.skaggsm.gridsim.tile.delta;
-
-import org.skaggsm.gridsim.tile.Tile;
+package org.skaggsm.gridsim.subsystem
 
 /**
  * @author Mitchell Skaggs
  */
-public class ChangeTemperatureTileDelta extends TileDelta {
-    private final double temperatureDelta;
-
-    public ChangeTemperatureTileDelta(int row, int col, double temperatureDelta) {
-        super(row, col);
-        this.temperatureDelta = temperatureDelta;
-    }
-
-    @Override
-    public void applyTo(Tile tile) {
-        tile.addTemperature(temperatureDelta);
-    }
-}
+data class TileLocation(val row: Int, val col: Int)
